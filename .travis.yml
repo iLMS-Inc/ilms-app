@@ -1,0 +1,29 @@
+sudo: required
+
+env:
+  global:
+  - secure: LdIxWrzTVMVQmODO0SAGWUmzicqbXM4/3U8C3x6k8l8kHmaEY+Lxh/K80+PkkabxD/Cyl8/OUT7IH4bk3X+Ys5Jzw9wpKnKUgimNH+T6vOE84iDu/VqzkqS69XlqZMI7Su3o1gXuPjBvuPLa/2Y71VuRx9O/LMFgusNE46XtVt0m6BI5c9UE+BUKPPoT+u4jy1z9B3O2UOpcUVDx+6G/4ONYPoVEUnh433SiL2LwYOKzhtTIqu3/bINwZ4mxjdOIxR2U/YDBg+hhPiB2zgBPlkAAZBGEQ1na1b+Fy4WtYYLNCmlF18mP9TdKBAxrYZMucGxRoUQdlptxXiTzyrCoO34W8I2dldKfrhBXoSNS4a2kWvJBlEGLiGaKFAMmPmMM9EqOTW9vW6YbnJqqnUZYRrm6vsAlDvwYSmfGSylNKQ0V4l6YWdO4P0gcdmbB6+84RnNirgWRiJAGMqrl7T6MV8COnz9bDPUrf7f1YgE0KKk1cZmK/n0LuS0JeV3rQ74J4yd8G2p48QsdcB3bOolA5CSHzBgya4TvMLAKVwcjjEypnd37FPBxhM3JybHA1D44BtnQ8BFWHRSDGJkB/lbjkfTKE53kduA/DpGmmMba5SXCO6UuYaO2qhcmHAL6zha/rPiAx26vb6aLUVfml9DcFXhTKsMO/R+7bZo12W4usrk= # DOCKER_EMAIL
+  - secure: DwvS0h9ELbWu8FSS1T3ngVzguGN2o8ownKhBN4qZ345HdTV5HVSe+uEoyNuNbwUDXBeWVC7iISUNtMq503ec/jGafw6SGq7ivgrgHXC/Iqt05YYdGNmNfFpf5/S6aQHDi/60D5BcVxzQfa14u0XV79l1SoPfcCoQI1+L8Ow6sjTrKJzrr9zBgqKzXILA/z+3hU031VYvatKQTJxQREtqglXi5Bn9r4iCnNH1VDJSIsNOIKPDojmzsARn2a0ePz6mWMRgiZJYFmxQNd3SoabpeInXs2TAWn6BFLO01SMUExRy9Ryq677dAYvvjCEKiJBw7h9nZa86627rf7Ldp+vhmtYqiY89PtVC1aKvo/ti78I1pJypeUbhTidFXAMP2vuxyVG/uB+VwHfdGCYknmXpF4BDnKJ4LFpKbrU/e5W0zQTPHZ8VH5kwM1e0UslRUTJjYebxz/Kug7pSmvLL85SK26s7s6KU3gXjhUbeZBgK9wAcOnRWdUHaq0ORUkAHl83Ep0uTSHNDLgsSDXp/XrLa+DX3M8yCyCvzi59GaMWumEtERc9a2YRC46FN7sibX+KdD5W+JtRQQQQhZK45v7N+Dy0GoeCF59c5Rp08RRpsenFqp0hJeOIp3jeH25LMtunGyLHJUu+2ale7CvCGry6hjDC0F2mz0nLLUd/AbnBuCsw= # DOCKER_USER
+  - secure: KLeQSLtTCcelEikB+VPrTiqmJUEYwiTmVrFgJpX324wP3cRtduZNmw4jMW0u70lDzzT/AMvpjbvXTAaUrbIfVK49BkEF+tfhVRX9fn6t5J0Djq4yPUSm9ZF0sNXXXLBE01mWAoFclUlq6KLibU52XkNYuib3yV/Q/5I/XQGTtpLzrGintKOnvjH3HCW/zkpgPwT0t/iqfdORKsaqOpk2s8K53SARq11WcEfULhIZex3O6W4W2KUmMyxtBBQmOA6E/xbaY6Bk0eT0ZDVxuECy6klsciNHsr44VS/0qwYPNuus5+ptV9pPibeKdZYN/z8hzAH1q5+YiFsmszjYGxcna0mf7v7DuE43OuSAcfskDd4BDfukNA2y9L7hanQwIjXgdt9orcP8Ja0bPbK9KAg1pCvr72Rz4/Gly/1oanyPBa6ynenWV+0hXxr/KnW0VblmyVYAQ9/XcuXViT5Omzd4pV39Pcjvgb8v6tr1c6r4JtYHdOuS1gj7Y1B/O6QsWsaNwpjkEB52mBSPke/rf9hnmMHNzfVI4wJiczfrtxu+J87WXmU5IN2m+RcUrQ7AwVuDh+3q5uNC5SBWk3HUg7QanfrxxW1pvEAzgKbGDFmPiTCrc76AJWEhk0Qn1b4uwuhzj7sGWasR+aLQ0t1Ji1w9ix5U7omQVg04y2YcSYQxqDU= # DOCKER_PASS
+  - COMMIT=${TRAVIS_COMMIT::8}
+
+services:
+  - docker
+
+language: java
+java:
+  - '1.8'
+
+cache:
+  directories:
+    - $HOME/.m2
+
+script:
+  - mvn package
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - export REPO=ilms/ilms-app
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
