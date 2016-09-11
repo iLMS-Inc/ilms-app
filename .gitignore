@@ -70,3 +70,5 @@ fabric.properties
 
 .idea
 *.iml
+node_modules
+src/main/webapp/dist
