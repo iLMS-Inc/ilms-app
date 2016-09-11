@@ -20,7 +20,7 @@ class Login extends React.Component {
           <input id="username"/>
         </div>
         <div>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Passwordsa</label>
           <input id="password"/>
         </div>
       </div>
