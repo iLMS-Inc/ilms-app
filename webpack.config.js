@@ -10,6 +10,7 @@ module.exports = {
   devtool: 'eval',
   cache: true,
   debug: true,
+  context: path.resolve(__dirname),
   output: {
     filename: "app.js",
     chunkFilename: "chunks/app.[hash].js",
@@ -19,10 +20,16 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: /\.css$/, loader: 'style-loader!css-loader',
+      },
+      {
         test: path.join(__dirname, '.'),
         exclude: /(node_modules)/,
         loader: 'babel-loader'
       }
-    ]
+    ],
+  },
+  resolve: {
+    modulesDirectories: ['node_modules']
   }
 };
