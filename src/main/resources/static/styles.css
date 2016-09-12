@@ -1,9 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
 .login-page {
-  width: 600px;
-  padding: 8% 0 0;
-  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .form {
   position: relative;
@@ -89,7 +90,8 @@
   color: #EF3B3A;
 }
 body {
-  background: url(https://pp.vk.me/c631926/v631926251/44f23/JEw9_07pm8U.jpg) repeat #fc0;
+  background: url(https://pp.vk.me/c631926/v631926251/4515c/6HvvFF8XD5A.jpg) no-repeat #fc0;
+  background-size: cover;
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
